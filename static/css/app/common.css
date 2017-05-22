@@ -1,0 +1,10 @@
+
+
+.nvbt {
+	width:15%;
+	height:100%;
+	float:right;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+}
