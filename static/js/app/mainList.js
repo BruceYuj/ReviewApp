@@ -19,18 +19,18 @@ function initHelp() {
 		]
 
 		// 初始化plan_type表
-		var sql = 'insert into tb_plan_type (id, plan_type_title) values ("' + genId('TP') + '", "功能介绍")';
+		var sql = 'insert into tb_plan_type (id, plan_type_title) values ("' + lib.h.genId('TP') + '", "功能介绍")';
 		lib.h.update(db, sql);
 		
 		// 初始化day_todo表
 		for (var i = 0; i < content.length; i++) {
-			var sql = 'insert into tb_day_todo (id, plan_type, plan_title) values ("' + genId('TD', i) +'", "功能介绍","' + content[i]+'")';
+			var sql = 'insert into tb_day_todo (id, plan_type, plan_title) values ("' + lib.h.genId('TD', i) +'", "功能介绍","' + content[i]+'")';
 			console.log(sql);
 			lib.h.update(db, sql);
 		}
 		
 		// 初始化td_review_model
-		var sql = 'insert into tb_review_model (id, model_title, model_regulation) values ("' + genId('MD') + '", "艾宾浩斯复习", "默认复习模式")';
+		var sql = 'insert into tb_review_model (id, model_title, model_regulation) values ("' + lib.h.genId('MD') + '", "艾宾浩斯复习", "默认复习模式")';
 		lib.h.update(db, sql);
 		
 		lib.h.insertItem('help', 'notFirst');
@@ -69,13 +69,4 @@ function genLi(data) {
 	var li = '<li class="mui-table-view-cell" id="' + id + '" >' + title + '</li>';
 	return [type, li];
 }
-/**
- * to generate id by type and.
- * @param {Object} type
- * @param {Object} number
- */
-function genId(type, number) {
-	var date = new Date();
-	var timestamp = date.getTime();
-	return type + timestamp.toString() + number;
-}
+

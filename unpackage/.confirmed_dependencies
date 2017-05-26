@@ -16,7 +16,8 @@
 			"static/css/mui.min.css",
 			"static/js/lib/common.js",
 			"view/mainList.html",
-			"static/js/app/mainList.js"
+			"static/js/app/mainList.js",
+			"static/js/app/menuCommon.js"
 		],
 		"refer": [
 			"view/mainList.html",
@@ -84,6 +85,9 @@
 			"static/css/mui.min.css",
 			"static/js/app/reviewMode.js",
 			"static/js/app/menuCommon.js"
+		],
+		"refer": [
+			"view/addMode.html"
 		]
 	}
 }

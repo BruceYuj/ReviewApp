@@ -106,5 +106,15 @@ lib.h.query = function(db, sql, func) {
 	}
 };
 
+/**
+ * to generate id by type and.
+ * @param {Object} type
+ * @param {Object} number
+ */
+lib.h.genId = function genId(type, number) {
+	var date = new Date();
+	var timestamp = date.getTime();
+	return type + timestamp.toString() + number;
+}
 //存储公共变量
 var db = lib.h.db();
