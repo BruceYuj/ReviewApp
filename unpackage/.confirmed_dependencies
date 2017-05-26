@@ -48,7 +48,16 @@
 			"static/js/mui.min.js",
 			"static/fonts/mui.ttf",
 			"static/css/mui.min.css",
-			"static/css/icons-extra.css"
+			"static/css/icons-extra.css",
+			"static/fonts/mui-icons-extra.ttf",
+			"static/js/app/dragMenu.js",
+			"static/js/lib/common.js",
+			"static/js/lib/jquery-1.11.2.min.js"
+		],
+		"refer": [
+			"view/noteType.html",
+			"view/analysis.html",
+			"view/reviewMode.html"
 		]
 	}
 }
