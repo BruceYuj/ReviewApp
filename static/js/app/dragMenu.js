@@ -22,15 +22,20 @@ mui.plusReady(function () {
 	// 处理监听
 	lib.on('#index', 'tap', function() {
 		closeMenu();
-		main.show();
 		main.evalJS("mask.close();");
+		main.show();
+
 	});
 	lib.on('#noteType', 'tap', function() {
 		closeMenu();
+		noteType.evalJS("mask.close();");
+		console.log('----' + plus.webview.all().length);
 		noteType.show();
 	});
 	lib.on('#reviewMode', 'tap', function() {
 		closeMenu();
+		reviewMode.evalJS("mask.close();");
+		console.log('----' + plus.webview.all().length);
 		reviewMode.show();
 	});
 	lib.on('#analysis', 'tap', function() {
@@ -49,9 +54,9 @@ function closeMenu () {
 	});
 
 	// 等待窗体动画结束，隐藏菜单webview，节省资源
-	setTimeout(function() {
-		menu.hide();
-	}, 300);
+//	setTimeout(function() {
+	menu.hide();
+//	}, 300);
 }
 
 
