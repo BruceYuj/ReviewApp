@@ -1,6 +1,5 @@
 mui.init({
-	keyEventBind: {
-	}
+
 });
 
 mui.plusReady(function() {	

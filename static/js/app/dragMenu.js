@@ -28,13 +28,13 @@ mui.plusReady(function () {
 	});
 	lib.on('#noteType', 'tap', function() {
 		closeMenu();
-		noteType.evalJS("mask.close();");
+		noteType.evalJS("mask.close(); backState = 0;");
 		console.log('----' + plus.webview.all().length);
 		noteType.show();
 	});
 	lib.on('#reviewMode', 'tap', function() {
 		closeMenu();
-		reviewMode.evalJS("mask.close();");
+		reviewMode.evalJS("mask.close(); backState = 0;");
 		console.log('----' + plus.webview.all().length);
 		reviewMode.show();
 	});
