@@ -18,51 +18,14 @@
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-icon mui-icon-back mui-pull-left menua"></a>
 			<a class="mui-icon mui-icon-checkmarkempty mui-pull-right adda"></a>
 			<h1 class="mui-title">添加任务</h1>
 		</header>
 		<div class="mui-content">
 			<div class="mui-content-padded">
-				<div class="mui-input-row" style="margin-top: 10px">
-					<input type="text" class="mui-input-clear" placeholder="待办事项标题" id="addTitle">
-				</div>
-				<div>
-					<textarea rows="12" placeholder="待办事项内容" id="addContent" ></textarea>
-				</div>
-				<p>图片(选填，总大小10M以下)</p>
-				<div id="image-list" class="row image-list"></div>
 			</div>
 		</div>
-		<nav class="mui-bar mui-bar-tab ">
-			<a id="date" class="mui-tab-item" href="#Popover_0">创建时间</a>
-			<a id="reviewMode" class="mui-tab-item" href="#Popover_1">复习模式</a>
-			<a id="taskType" class="mui-tab-item" href="#Popover_2">类别</a>
-		</nav>
-		
-		<div id="Popover_0" class="mui-popover mui-bar-popover">
-			<div class="mui-popover-arrow"></div>
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell"><a id="make_date"href="#" >选择日期</a>
-				</li>
-				<li class="mui-table-view-cell"><a id="make_time" href="#">选择时间</a>
-				</li>
 
-			</ul>
-		</div>
-		<div id="Popover_1" class="mui-popover mui-bar-popover">
-			<div class="mui-popover-arrow"></div>
-			<ul class="mui-table-view" style="width: 150px;">
-				<li class="mui-table-view-cell"><a href="#">艾宾浩斯复习</a></li>
-			</ul>
-		</div>
-		<div id="Popover_2" class="mui-popover mui-bar-popover">
-			<div class="mui-popover-arrow"></div>
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell"><a href="#">功能展示</a>
-				</li>
-			</ul>
-		</div>
 		<!-- mui -->
 		<script type="text/javascript" src="../static/js/mui.min.js"></script>
 		<!-- jquery -->
@@ -70,6 +33,6 @@
 		<!-- qiao.h.js -->
 		<script type="text/javascript" src="../static/js/lib/common.js"></script>
 		<!-- app -->
-		<script type="text/javascript" src="../static/js/app/addItem.js"></script>
+		<script type="text/javascript" src="../static/js/app/addMode.js"></script>
 	</body>
 </html>

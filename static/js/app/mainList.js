@@ -8,9 +8,10 @@ mui.plusReady(function() {
 function initHelp() {
 	var help = lib.h.getItem('help');
 	if (help == null) {
-		lib.h.update(db, 'create table if not exists tb_day_todo (id unique, plan_type, plan_title, plan_description, plan_mk_time, review_model, review_times, next_time, finish_state)');
-		lib.h.update(db, 'create table if not exists tb_review_model (id unique, model_title, model_regulation)');
-		lib.h.update(db, 'create table if not exists tb_plan_type (id unique, plan_type_title)');
+		lib.h.update(db, 'create table if not exists tb_plan (GUID TEXT unique, plan_title TEXT, plan_description TEXT, plan_mk_time DATETIME, review_model TEXT, plan_type TEXT)');
+		lib.h.update(db, 'create table if not exists tb_review_model (GUID TEXT unique, model_title TEXT, model_regulation TEXT)');
+		lib.h.update(db, 'create table if not exists tb_plan_type (GUID TEXT unique, plan_type_title TEXT)');
+		lib.h.update(db, 'create table if not exists tb_plan_flow (GUID TEXT unique, plan_id TEXT, review_time INTEGER, finish_state INTEGER, time_interval INTEGER, begin_time DATETIME)');
 		var content = [
 			'右上角添加事项',
 			'点击事项查看详情',
@@ -19,19 +20,22 @@ function initHelp() {
 		]
 
 		// 初始化plan_type表
-		var sql = 'insert into tb_plan_type (id, plan_type_title) values ("' + lib.h.genId('TP') + '", "功能介绍")';
+		var planTypeId = lib.h.uuid();
+		var sql = 'insert into tb_plan_type (GUID, plan_type_title) values ("' + planTypeId + '", "功能介绍")';
+		lib.h.update(db, sql);
+
+		// 初始化td_review_model
+		var sql = 'insert into tb_review_model (GUID, model_title, model_regulation) values ("' + lib.h.uuid() + '", "艾宾浩斯复习", "")';
 		lib.h.update(db, sql);
 		
 		// 初始化day_todo表
 		for (var i = 0; i < content.length; i++) {
-			var sql = 'insert into tb_day_todo (id, plan_type, plan_title) values ("' + lib.h.genId('TD', i) +'", "功能介绍","' + content[i]+'")';
+			var sql = 'insert into tb_plan (GUID, plan_type, plan_title) values ("' + lib.h.uuid() +'", "' + planTypeId + '","' + content[i]+'")';
 			console.log(sql);
 			lib.h.update(db, sql);
 		}
 		
-		// 初始化td_review_model
-		var sql = 'insert into tb_review_model (id, model_title, model_regulation) values ("' + lib.h.genId('MD') + '", "艾宾浩斯复习", "默认复习模式")';
-		lib.h.update(db, sql);
+
 		
 		lib.h.insertItem('help', 'notFirst');
 	}

@@ -23,7 +23,7 @@ mui.plusReady(function() {
 				zindex: 9997
 			}
 		});
-	}, 300);
+	}, 500);
 	
 	//添加复习任务,popGesture为none表示新建webview窗口无侧滑返回功能
 	add = mui.preload(lib.h.normalPage('addItem', {popGesture: 'none', top: '0px'}));

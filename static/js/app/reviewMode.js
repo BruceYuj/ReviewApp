@@ -50,10 +50,13 @@ function initList() {
 function newMode() {
 	mui.prompt(' ',' ','输入复习模式',['确认', '取消'], function(e) {
 		if (e.index == 0) {
-			mui.openWindow({
+			var webview = mui.openWindow({
 				url: "addMode.html",
-				id: "addMode"
-			})
+				id: "addMode",
+				extras: {
+					name: e.value
+				}
+			});
 		}
 	});
 }
