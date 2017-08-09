@@ -18,7 +18,9 @@ mui.plusReady(function() {
 	// 监听复习模式点击
 	getReviewMode();
 	$("#Popover_1").on('tap', 'li',function() {
-		$('#reviewMode').text($(this).text());
+		$('#reviewMode').text($(this).text())
+		                .attr("data", $(this).attr("id"))
+		                .attr("data-regulation", $(this).attr("data-regulation"));
 		$('#Popover_1').removeClass('mui-active');
 		$("#Popover_1").hide();
 	});
@@ -26,10 +28,15 @@ mui.plusReady(function() {
 	// 监听类别点击
 	getTaskType();
 	$("#Popover_2").on('tap', 'li',function() {
-		$('#taskType').text($(this).text());
+		$('#taskType').text($(this).text()).attr("data", $(this).attr("id"));
 		$('#Popover_2').removeClass('mui-active');
 		$("#Popover_2").hide();
 	});
+	
+	// 监听点击保存事件
+	$(".adda").on("tap", function() {
+		addTask();
+	})
 });
 
 /*
@@ -38,6 +45,52 @@ mui.plusReady(function() {
 function hideAdd() {
 	lib.h.hide('addItem', 'fade-out', 400);
 }
+
+/**
+ * 
+ */
+function addTask() {
+	var taskId;
+	var planTitle, planDescription;
+	var planTime, reviewModel,reviewRegulation, planType;
+	
+	taskId = lib.h.uuid();
+	planTitle = $("#addTitle").val();
+	planDescription = $("#addContent").val();
+	
+	planTime = $("#date").text() + ":0";
+	reviewModel = $("#reviewMode").attr("data");
+	reviewRegulation = $("#reviewMode").attr("data-regulation").split(",");
+	planType = $("#taskType").attr("data");
+	
+	console.log(planTitle);
+	console.log(planDescription);
+	console.log(planTime);
+	console.log(reviewModel);
+	console.log(planType);
+	console.log(reviewRegulation);
+	
+	var sql = 'insert into tb_plan (GUID, plan_type, plan_title, plan_description, plan_mk_time, review_model) ' + 
+			'values ("' + taskId +'", "' + planType + '","' + planTitle + '", "' + planDescription +'", "'
+			+ planTime +'", "' + reviewModel +'")';
+	console.log(sql);
+	lib.h.update(db, sql);
+	
+	for (var i = 0; i < reviewRegulation.length; i++) {
+		var beginTime = new Date(planTime).getTime() + (parseInt(reviewRegulation[i]) * 3600 * 1000);
+//		console.log(beginTime);
+		beginTime = new Date(beginTime);
+//		console.log(beginTime);
+		beginTime = beginTime.getFullYear() + '-' + (beginTime.getMonth() + 1) + '-' + beginTime.getDate() + ' ' + beginTime.getHours() + ':0';
+		
+		var flowSql = 'insert into tb_plan_flow (GUID, plan_id, review_time, finish_state, time_interval, begin_time) ';
+		flowSql += 'values ("' + lib.h.uuid() + '", "' + taskId + '", "' + (i+1) + '", "' + (0) + '", "' 
+		                       + parseInt(reviewRegulation[i]) + '", "' + beginTime + '")';
+		console.log(flowSql);
+		lib.h.update(db, flowSql);
+	}
+}
+
 
 /*
  * 调用native日期选择器
@@ -84,7 +137,7 @@ function chooseTime() {
  * 从数据库中获取review mode，并更新
  */
 function getReviewMode() {
-	lib.h.query(db, 'select * from tb_review_model order by id desc', function(res) {
+	lib.h.query(db, 'select * from tb_review_model order by GUID desc', function(res) {
 		$("#Popover_1 ul").empty();
 		for (var i = 0; i < res.rows.length; i++) {
 			var li = genModeLi(res.rows.item(i));
@@ -97,13 +150,14 @@ function getReviewMode() {
  * 从数据库中获取任务类别，并更新
  */
 function getTaskType() {
-	lib.h.query(db, 'select * from tb_plan_type order by id desc', function(res) {
+	lib.h.query(db, 'select * from tb_plan_type order by GUID desc', function(res) {
 		$("#Popover_2 ul").empty();
 		for (var i = 0; i < res.rows.length; i++) {
 			var data = res.rows.item(i);
-			var id = data.id;
+			var id = data.GUID;
 			var title = data.plan_type_title;
 			var li = '<li class="mui-table-view-cell" id="' + id + '" >' + title + '</li>';
+			console.log(li);
 			$("#Popover_2 ul").append(li);
 		}
 	});	
@@ -113,7 +167,7 @@ function getTaskType() {
  * 生成review mode的HTML 字符串
  */
 function genModeLi(data) {
-	var id = data.id;
+	var id = data.GUID;
 	var title = data.model_title;
 	var regulation = data.model_regulation;	
 	var li = '<li class="mui-table-view-cell" id="' + id + '" data-regulation="'+ regulation +'" >' + title + '</li>';
