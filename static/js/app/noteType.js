@@ -6,7 +6,7 @@ mui.init({
 
 var current, menu, mask = mui.createMask(_closeMenu);
 var showMenu = false;
-var num = 0;
+
 mui.plusReady(function() {
 	initList();
 	
@@ -41,10 +41,10 @@ mui.plusReady(function() {
 function initList() {	
 	var $list = $('#typeList').empty();
 
-	lib.h.query(db, 'select * from tb_plan_type order by id desc', function(res) {
+	lib.h.query(db, 'select * from tb_plan_type', function(res) {
 		var data = res.rows;
 		for (var i = 0; i < res.rows.length; i++) {
-			var id = data.item(i).id;
+			var id = data.item(i).GUID;
 			var type = data.item(i).plan_type_title;
 			var li = '<li class="mui-table-view-cell" id="' + id + '" >' + type + '</li>';
 			$list.append(li);
@@ -57,13 +57,12 @@ function newType() {
 		if (e.index == 0) {
 			insertType(e.value);
 			initList();
-			num++;
 		}
 	});
 }
 
 function insertType(value) {
-	var sql = 'insert into tb_plan_type (id, plan_type_title) values ("' + lib.h.genId('TP', num) + '", "'+ value + '")';
+	var sql = 'insert into tb_plan_type (guid, plan_type_title) values ("' + lib.h.uuid() + '", "'+ value + '")';
 	lib.h.update(db, sql);	
 }
 

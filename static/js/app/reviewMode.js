@@ -34,10 +34,10 @@ mui.plusReady(function() {
 function initList() {	
 	var $list = $('#modeList').empty();
 
-	lib.h.query(db, 'select * from tb_review_model order by id desc', function(res) {
+	lib.h.query(db, 'select * from tb_review_model', function(res) {
 		var data = res.rows;
 		for (var i = 0; i < res.rows.length; i++) {
-			var id = data.item(i).id;
+			var id = data.item(i).GUID;
 			var title = data.item(i).model_title;
 			var description = data.item(i).model_description;
 			var li = '<li class="mui-table-view-cell" id="' + id + '" >' + title + '</li>';

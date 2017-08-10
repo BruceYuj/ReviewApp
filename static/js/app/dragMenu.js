@@ -13,12 +13,7 @@ var analysis = null;
 var type = null; // 该参数用来改善性能
 mui.plusReady(function () {
 	main = plus.webview.currentWebview().opener();
-	
-	// 预加载页面
-	noteType = mui.preload(lib.h.normalPage('noteType', { top: '0px'}));
-	reviewMode = mui.preload(lib.h.normalPage('reviewMode', { top: '0px'}));
-	analysis = mui.preload(lib.h.normalPage('analysis', { top: '0px'}));
-	
+				
 	// 处理监听
 	lib.on('#index', 'tap', function() {
 		closeMenu();
@@ -27,20 +22,16 @@ mui.plusReady(function () {
 
 	});
 	lib.on('#noteType', 'tap', function() {
+		mui.openWindow(lib.h.normalPage('noteType', { top: '0px'}));
 		closeMenu();
-		noteType.evalJS("mask.close(); backState = 0;");
-		console.log('----' + plus.webview.all().length);
-		noteType.show();
 	});
 	lib.on('#reviewMode', 'tap', function() {
+		mui.openWindow(lib.h.normalPage('reviewMode', { top: '0px'}));
 		closeMenu();
-		reviewMode.evalJS("mask.close(); backState = 0;");
-		console.log('----' + plus.webview.all().length);
-		reviewMode.show();
 	});
 	lib.on('#analysis', 'tap', function() {
+		mui.openWindow(lib.h.normalPage('analysis', { top: '0px'}));
 		closeMenu();
-		analysis.show();
 	});
 })
 		
@@ -53,10 +44,7 @@ function closeMenu () {
 		}
 	});
 
-	// 等待窗体动画结束，隐藏菜单webview，节省资源
-//	setTimeout(function() {
 	menu.hide();
-//	}, 300);
 }
 
 
