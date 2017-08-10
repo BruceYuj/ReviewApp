@@ -9,30 +9,88 @@
 
 		<!-- mui -->
 		<link type="text/css" rel="stylesheet" href="../static/css/mui.min.css"/>
-		<style>
-			.mui-bar-popover {
-				width: 30%;
-			}
-		</style>
+		<link rel="stylesheet" href="../static/css/mui.picker.min.css" />
+		<link rel="stylesheet" href="../static/css/mui.poppicker.css" />
+		<link rel="stylesheet" href="../static/css/app/addMode.css" />
 	</head>
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-icon mui-icon-checkmarkempty mui-pull-right adda"></a>
-			<h1 class="mui-title">添加任务</h1>
+			<a class="mui-icon mui-icon-checkmarkempty mui-pull-left adda"></a>
+			<a class="mui-pull-right button">添加</a>
+			<h1 class="mui-title">添加复习模式</h1>
 		</header>
 		<div class="mui-content">
-			<div class="mui-content-padded">
+			<div class="header">
+				<span>复习次数</span>
+				<span>距离上次复习时间</span>
+			</div>
+			<div id="scroll" class="mui-scroll-wrapper" style="top: 6.5rem; height: 30rem;">
+				<div class="mui-scroll">
+					<ul class="mui-table-view boxList">
+					    <li class="mui-table-view-cell">
+							<span>1</span>
+							<span>2时</span>
+					    </li>
+					    <li class="mui-table-view-cell">
+					        <span>10</span>
+							<span>22时</span>
+					    </li>
+					    <li class="mui-table-view-cell">
+					        <span>1</span>
+							<span>2时</span>
+					    </li>
+					    <li class="mui-table-view-cell">
+					        <span>1</span>
+							<span>2时</span>
+					    </li>
+					    <li class="mui-table-view-cell">
+					        <span>1</span>
+							<span>2时</span>
+					    </li>
+					    <li class="mui-table-view-cell">
+					        <span>1</span>
+							<span>2时</span>
+					    </li>
+					    <li class="mui-table-view-cell">
+					        <span>1</span>
+							<span>2时</span>
+					    </li>
+					    <li class="mui-table-view-cell">
+					        <span>1</span>
+							<span>2时</span>
+					    </li>
+					    <li class="mui-table-view-cell">
+					        <span>1</span>
+							<span>2时</span>
+					    </li>
+					    <li class="mui-table-view-cell">
+					        <span>1</span>
+							<span>2时</span>
+					    </li>
+					    <li class="mui-table-view-cell">
+					        <span>1</span>
+							<span>2时</span>
+					    </li>
+					    <li class="mui-table-view-cell">
+					        <span>1</span>
+							<span>2时</span>
+					    </li>					    
+					</ul>
+				</div>
 			</div>
 		</div>
 
 		<!-- mui -->
 		<script type="text/javascript" src="../static/js/mui.min.js"></script>
+		<script src="../static/js/lib/mui.picker.min.js"></script>
+		<script src="../static/js/lib/mui.poppicker.js"></script>
 		<!-- jquery -->
 		<script type="text/javascript" src="../static/js/lib/jquery-1.11.2.min.js"></script>
 		<!-- qiao.h.js -->
 		<script type="text/javascript" src="../static/js/lib/common.js"></script>
 		<!-- app -->
+		<script src="../static/js/app/reviewMode.data.js"></script>
 		<script type="text/javascript" src="../static/js/app/addMode.js"></script>
 	</body>
 </html>
