@@ -1,7 +1,10 @@
 // 初始化
 mui.init({
 	swipeBack: false,
-	beforeback: back
+	beforeback: back,
+	gestureConfig: {
+		longtap: true
+	}
 });
 
 var current, menu, mask = mui.createMask(_closeMenu);
@@ -29,6 +32,32 @@ mui.plusReady(function() {
 		style: 'circle',
 		offset: '46px'
 	}, pulldownRefresh);
+	
+	// 长按删除
+	$("#modeList").on("longtap","li", function() {
+		var that = this;
+		var btnArray = ['否', '是'];
+		mui.confirm('确认删除？', 'Hello client', btnArray, function(e) {
+			if (e.index == 1) {
+				var sql = 'delete from tb_review_model where GUID="' + $(that).attr("id") + '"';
+				console.log(sql);
+				lib.h.update(db, sql);
+				$(that).remove();
+			} 
+		},"div");
+	});
+
+	$("#modeList").on("tap","li", function() {
+		mui.openWindow({
+			url: "addMode.html",
+			id: "addMode",
+			extras: {
+				name: $(this).find("span").text(),
+				update: true,
+				GUID: $(this).attr("id") 
+			}
+		});
+	});
 });
 
 function initList() {	
@@ -36,11 +65,23 @@ function initList() {
 
 	lib.h.query(db, 'select * from tb_review_model', function(res) {
 		var data = res.rows;
-		for (var i = 0; i < res.rows.length; i++) {
+		console.log(data.length);
+		for (var i = 0; i < data.length; i++) {
+			var total=0;
 			var id = data.item(i).GUID;
 			var title = data.item(i).model_title;
-			var description = data.item(i).model_description;
-			var li = '<li class="mui-table-view-cell" id="' + id + '" >' + title + '</li>';
+			var regulation = data.item(i).model_regulation;
+			regulation = regulation.split(',');
+			
+			for (var j = 0; j < regulation.length; j++) {
+				total += parseInt(regulation[j]);
+			}
+			var li = '<li class="mui-table-view-cell mui-media" id="' + id + '" >' + 
+		            '<div class="mui-media-body">' +
+		            '<span>' + title + '</span>' +
+		            '<p class="mui-ellipsis">' + '复习' + regulation.length + '次，共' + hourToDay(total) + '天' + '</p>' +
+		            '</div>' + 
+			        '</li>';
 			console.log(li);
 			$list.append(li);
 		}

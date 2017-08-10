@@ -130,5 +130,9 @@ function formatDate(datetime) {
 	return datetime.getFullYear() + '-' + (datetime.getMonth() + 1) + '-' + datetime.getDate() + ' ' + datetime.getHours();
 }
 
+function hourToDay(number) {
+	return Math.ceil(number/24);
+}
+
 //存储公共变量
 var db = lib.h.db();
