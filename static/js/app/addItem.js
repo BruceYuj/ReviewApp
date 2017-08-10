@@ -1,14 +1,7 @@
-mui.init({
-
-});
-
+mui.init();
 mui.plusReady(function() {	
-	// 封装退出, 设定fade-out效果
-	var oldBack = mui.back;
-	mui.back = function() {
-		lib.h.hide('addItem', 'fade-out', 400);
-		oldBack();
-	}
+	// 初始化数据
+	initTime();
 	
 	// 监听点击事件
 	lib.on('.mui-icon-back', 'tap', hideAdd);
@@ -35,19 +28,28 @@ mui.plusReady(function() {
 	
 	// 监听点击保存事件
 	$(".adda").on("tap", function() {
-		addTask();
+		var state = addTask();		
+		if(state) plus.webview.close(plus.webview.currentWebview());
 	})
 });
 
+/**
+ * 初始化时间
+ */
+function initTime() {
+	var now = new Date();
+	$("#date").text(formatDate(now));
+}
+
 /*
- * hide add webview
+ * close current webview
  */
 function hideAdd() {
-	lib.h.hide('addItem', 'fade-out', 400);
+	plus.webview.close(plus.webview.currentWebview());
 }
 
 /**
- * 
+ * 保存任务
  */
 function addTask() {
 	var taskId;
@@ -60,35 +62,35 @@ function addTask() {
 	
 	planTime = $("#date").text() + ":0";
 	reviewModel = $("#reviewMode").attr("data");
-	reviewRegulation = $("#reviewMode").attr("data-regulation").split(",");
 	planType = $("#taskType").attr("data");
+	console.log(planTime.split(' '));	
 	
-	console.log(planTitle);
-	console.log(planDescription);
-	console.log(planTime);
-	console.log(reviewModel);
-	console.log(planType);
-	console.log(reviewRegulation);
+	// 校验1
+	if (!planTitle || !reviewModel || !planType) {
+		mui.toast("请填写必填内容！");
+		return false;
+	}
+	
+	reviewRegulation = $("#reviewMode").attr("data-regulation").split(",");
 	
 	var sql = 'insert into tb_plan (GUID, plan_type, plan_title, plan_description, plan_mk_time, review_model) ' + 
 			'values ("' + taskId +'", "' + planType + '","' + planTitle + '", "' + planDescription +'", "'
 			+ planTime +'", "' + reviewModel +'")';
 	console.log(sql);
 	lib.h.update(db, sql);
-	
+
+	var flowSql = 'insert into tb_plan_flow (GUID, plan_id, review_time, finish_state, time_interval, begin_time) values ';
 	for (var i = 0; i < reviewRegulation.length; i++) {
 		var beginTime = new Date(planTime).getTime() + (parseInt(reviewRegulation[i]) * 3600 * 1000);
-//		console.log(beginTime);
 		beginTime = new Date(beginTime);
-//		console.log(beginTime);
-		beginTime = beginTime.getFullYear() + '-' + (beginTime.getMonth() + 1) + '-' + beginTime.getDate() + ' ' + beginTime.getHours() + ':0';
-		
-		var flowSql = 'insert into tb_plan_flow (GUID, plan_id, review_time, finish_state, time_interval, begin_time) ';
-		flowSql += 'values ("' + lib.h.uuid() + '", "' + taskId + '", "' + (i+1) + '", "' + (0) + '", "' 
+		beginTime = formatDate(beginTime) + ':0';		
+		flowSql += '("' + lib.h.uuid() + '", "' + taskId + '", "' + (i+1) + '", "' + (0) + '", "' 
 		                       + parseInt(reviewRegulation[i]) + '", "' + beginTime + '")';
-		console.log(flowSql);
-		lib.h.update(db, flowSql);
+		                       
+		if (i != (reviewRegulation.length-1)) flowSql += ',';
 	}
+	console.log(flowSql);
+	lib.h.update(db, flowSql);
 }
 
 
@@ -100,7 +102,8 @@ function chooseDate() {
 	var $date = $("#date");
 	plus.nativeUI.pickDate(function(e) {
 		var d = e.date;
-		$date.text(d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate());
+		d = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+		$date.text(d + ' ' + $date.text().split(' ')[1]);
 	}, function(e) {
 		mui.toast("您没有选择日期");
 	}, {
@@ -119,11 +122,7 @@ function chooseTime() {
 	plus.nativeUI.pickTime(function(e) {
 		var d = e.date;
 		var str = $time.text().split(' ');
-		if (str != '创建时间') {
-			$time.text(str[0] + " " + d.getHours());			
-		} else {
-			$time.text(dTime.getFullYear() + "-" + (dTime.getMonth() + 1) + "-" + dTime.getDay() + " " + d.getHours());	
-		}
+		$time.text(str[0] + " " + d.getHours());			
 	}, function(e) {
 		mui.toast("您没有选择时间");
 	}, {

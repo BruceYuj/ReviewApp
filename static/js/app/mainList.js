@@ -3,6 +3,7 @@ mui.plusReady(function() {
 	
 	//初次登录展示功能
 	initHelp();
+	initList();
 });
 
 function initHelp() {
@@ -12,12 +13,6 @@ function initHelp() {
 		lib.h.update(db, 'create table if not exists tb_review_model (GUID TEXT unique, model_title TEXT, model_regulation TEXT)');
 		lib.h.update(db, 'create table if not exists tb_plan_type (GUID TEXT unique, plan_type_title TEXT)');
 		lib.h.update(db, 'create table if not exists tb_plan_flow (GUID TEXT unique, plan_id TEXT, review_time INTEGER, finish_state INTEGER, time_interval INTEGER, begin_time DATETIME)');
-//		var content = [
-//			'右上角添加事项',
-//			'点击事项查看详情',
-//			'长按删除事项',
-//			'右滑事项完成'
-//		]
 
 		// 初始化plan_type表
 		var planTypeId = lib.h.uuid();
@@ -28,21 +23,8 @@ function initHelp() {
 		var sql = 'insert into tb_review_model (GUID, model_title, model_regulation) values ("' + lib.h.uuid() + '", "艾宾浩斯复习", "1,12,24,48,96,168,360")';
 		lib.h.update(db, sql);
 		
-		// 初始化tb_plan表
-//		for (var i = 0; i < content.length; i++) {
-//			var sql = 'insert into tb_plan (GUID, plan_type, plan_title) values ("' + lib.h.uuid() +'", "' + planTypeId + '","' + content[i]+'")';
-//			console.log(sql);
-//			lib.h.update(db, sql);
-//		}
-		var sql = 'insert into tb_plan_flow (GUID, plan_id, review_time, finish_state, time_interval, begin_time) values ("3ded3020-f6db-4bdd-b576-05bfa9c73cb6", "1239a6ed-b99d-4872-ad5f-c5bfefa3f51a", "1", "0", "1", "2017-8-10 7:0")'
-		console.log("test1");
-		lib.h.update(db, sql);
-
-		
 		lib.h.insertItem('help', 'notFirst');
-	}
-	
-	initList();
+	}	
 }
 
 /**
@@ -54,6 +36,7 @@ function initList() {
 
 	lib.h.query(db, 'select * from tb_plan order by plan_type desc', function(res) {
 		var type = '';
+		console.log(res.rows.length);
 		for (var i = 0; i < res.rows.length; i++) {
 			var li = genLi(res.rows.item(i));
 			console.log(li);
@@ -68,7 +51,7 @@ function initList() {
 }
 
 function genLi(data) {
-	var id = data.id;
+	var id = data.GUID;
 	var type = data.plan_type;
 	var title = data.plan_title;
 	

@@ -122,5 +122,13 @@ lib.h.uuid = function uuidv4() {
   )
 };
 
+// 其他工具方法
+/**
+ * format date: 2017-08-08 6
+ */
+function formatDate(datetime) {
+	return datetime.getFullYear() + '-' + (datetime.getMonth() + 1) + '-' + datetime.getDate() + ' ' + datetime.getHours();
+}
+
 //存储公共变量
 var db = lib.h.db();

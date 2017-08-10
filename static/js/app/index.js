@@ -4,12 +4,11 @@ mui.init({
 	beforeback: back
 });
 
-var add = null;
-var main, menu, mask = mui.createMask(_closeMenu);
+var menu, mask = mui.createMask(_closeMenu);
 var showMenu = false;
 
 mui.plusReady(function() {
-	main = plus.webview.currentWebview();
+//	main = plus.webview.currentWebview();
 	
 	// 自动预创建menu窗口
 	// 目的是等待窗体动画结束后，再执行create webview操作，避免资源竞争，导致窗口动画不流畅
@@ -25,8 +24,8 @@ mui.plusReady(function() {
 		});
 	}, 500);
 	
-	//添加复习任务,popGesture为none表示新建webview窗口无侧滑返回功能
-	add = mui.preload(lib.h.normalPage('addItem', {popGesture: 'none', top: '0px'}));
+
+
 	lib.on('.adda', 'tap', showAdd);
 	lib.on('.menua', 'tap', openMenu);
 	
@@ -38,7 +37,9 @@ mui.plusReady(function() {
 });
 
 function showAdd() {
-	lib.h.show('addItem', 'slide-in-right', 300);
+	//添加复习任务,popGesture为none表示新建webview窗口无侧滑返回功能
+	mui.openWindow(lib.h.normalPage('addItem', {popGesture: 'none', top: '0px'}));
+
 }
 
 function back() {
