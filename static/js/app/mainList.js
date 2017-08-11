@@ -1,9 +1,47 @@
-
+var current;
+var planType;
 mui.plusReady(function() {
+	current = plus.webview.currentWebview();
+	planType = getPlanType();
 	
 	//初次登录展示功能
 	initHelp();
-	initList();
+	initList(planType);
+	
+	// 下拉刷新
+	current.setPullToRefresh({
+		support: true,
+		height: '50px',
+		range: '50px',
+		style: 'circle',
+		offset: '46px'
+	}, pulldownRefresh);
+
+	// 长按完成任务
+	$("#todoList").on("longtap","li", function() {
+		var that = this;
+		var btnArray = ['否', '是'];
+		mui.confirm('确认完成当前任务？', 'Hello client', btnArray, function(e) {
+			if (e.index == 1) {
+				var sql = 'UPDATE tb_plan_flow SET finish_state=1 WHERE GUID="' + $(that).attr("id") + '"';
+				console.log(sql);
+				lib.h.update(db, sql);
+				$(that).remove();
+			} 
+		},"div");
+	});
+	// 点击查看任务详情
+	$("#todoList").on("tap","li", function() {
+		mui.openWindow({
+			url: "addItem.html",
+			id: "addItem",
+			extras: {
+				name: $(this).find("p").text() + "(查看)",
+				read: true,
+				GUID: $(this).attr("data") 
+			}
+		});
+	});
 });
 
 function initHelp() {
@@ -30,32 +68,61 @@ function initHelp() {
 /**
  * 初始化今日待办
  */
-function initList() {
+function initList(planType) {
 	
-	var $list = $('#todoList').empty();
-
-	lib.h.query(db, 'select * from tb_plan order by plan_type desc', function(res) {
-		var type = '';
-		console.log(res.rows.length);
+	var $list = $('#todoList ul').empty();
+	var now = formatDate(new Date()) + ':00:00';
+	var sql = 'SELECT plan_id,tb_plan_flow.GUID, plan_title, plan_type, review_time, begin_time FROM tb_plan INNER JOIN tb_plan_flow ON ' +
+			  'tb_plan.GUID = tb_plan_flow.plan_id AND begin_time <="' + now + '" AND finish_state = 0 ORDER BY begin_time DESC';
+	console.log(now);
+	lib.h.query(db, sql, function(res) {
+//		console.log(res.rows.length);
 		for (var i = 0; i < res.rows.length; i++) {
-			var li = genLi(res.rows.item(i));
-			console.log(li);
-			if (type != li[0]) {
-				type = li[0];
-				$list.append('<p style="margin: 4% 0 0 4%;">' + type + '</p>');
-				$list.append('<ul  class="mui-table-view ' + type + '" style="margin-top:0;"></ul>');
-			}
-			$list.find('.'+type).append(li[1]);
+//			console.log(res.rows.item(i).plan_id);
+//			console.log(res.rows.item(i).GUID);
+//			console.log(res.rows.item(i).plan_title);
+//			console.log(res.rows.item(i).review_time);
+//			console.log(res.rows.item(i).begin_time);
+			
+			var str = '';
+			str +=  '<li class="mui-table-view-cell" id="' + res.rows.item(i).GUID +'" data="' + res.rows.item(i).plan_id + '">' +
+				    '<div class="plan">' +
+					'<div class="plan-content">' +
+					'<div>' +
+					'<span>第' + res.rows.item(i).review_time + '次 </span>' + 
+					'<span>' + res.rows.item(i).begin_time + '</span>' +
+					'</div>' +
+					'<p>' + res.rows.item(i).plan_title + '<p>' +
+					'</div>' +
+					'<div class="plan-type">' + planType[res.rows.item(i).plan_type] + '</div>' +						
+					'</div>' +
+					'</li>';
+			$("#todoList ul").append(str);
+
 		}
 	});
 }
 
-function genLi(data) {
-	var id = data.GUID;
-	var type = data.plan_type;
-	var title = data.plan_title;
-	
-	var li = '<li class="mui-table-view-cell" id="' + id + '" >' + title + '</li>';
-	return [type, li];
+/**
+ * 下拉刷新具体业务实现
+*/
+function pulldownRefresh() {
+	setTimeout(function() {
+		initList(planType);
+		current.endPullToRefresh();
+	}, 1000);
 }
 
+/**
+ * 获取plan的类别 
+ */
+function getPlanType() {
+	var result = {};
+	lib.h.query(db, 'select * from tb_plan_type', function(res) {
+		var data = res.rows;
+		for (var i = 0; i < res.rows.length; i++) {
+			result[data.item(i).GUID] = data.item(i).plan_type_title; 
+		}
+	});
+	return result;
+}

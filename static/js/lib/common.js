@@ -127,7 +127,13 @@ lib.h.uuid = function uuidv4() {
  * format date: 2017-08-08 6
  */
 function formatDate(datetime) {
-	return datetime.getFullYear() + '-' + (datetime.getMonth() + 1) + '-' + datetime.getDate() + ' ' + datetime.getHours();
+	var month = datetime.getMonth() + 1;
+	var day = datetime.getDate();
+	var hour = datetime.getHours();
+	if (month < 10) month = '0' + month;
+	if (day < 10) day = '0' + day;
+	if (hour < 10) hour = '0' + hour;
+	return datetime.getFullYear() + '-' + month + '-' + day + ' ' + hour;
 }
 
 /**

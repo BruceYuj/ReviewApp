@@ -1,0 +1,19 @@
+#todoList  {
+	margin: 10px;
+	border-radius: 10px;
+}
+.plan {
+	display: flex;
+	justify-content: space-between;
+}
+.plan-content {
+	display:flex;
+	flex-direction: column;
+}
+.plan-content p {
+	text-align: center;
+}
+.plan-type {
+	display: flex;
+	align-items: center;
+}

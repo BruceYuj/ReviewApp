@@ -1,36 +1,45 @@
 mui.init();
-mui.plusReady(function() {	
-	// 初始化数据
-	initTime();
+mui.plusReady(function() {
+	var title = mui.currentWebview.name;
+	var read = mui.currentWebview.read;
+	var GUID = mui.currentWebview.GUID;
 	
-	// 监听点击事件
-	lib.on('.mui-icon-back', 'tap', hideAdd);
-	lib.on('#make_date', 'tap', chooseDate);
-	lib.on('#make_time', 'tap', chooseTime);
-	
-	// 监听复习模式点击
-	getReviewMode();
-	$("#Popover_1").on('tap', 'li',function() {
-		$('#reviewMode').text($(this).text())
-		                .attr("data", $(this).attr("id"))
-		                .attr("data-regulation", $(this).attr("data-regulation"));
-		$('#Popover_1').removeClass('mui-active');
-		$("#Popover_1").hide();
-	});
-	
-	// 监听类别点击
-	getTaskType();
-	$("#Popover_2").on('tap', 'li',function() {
-		$('#taskType').text($(this).text()).attr("data", $(this).attr("id"));
-		$('#Popover_2').removeClass('mui-active');
-		$("#Popover_2").hide();
-	});
-	
-	// 监听点击保存事件
-	$(".adda").on("tap", function() {
-		var state = addTask();		
-		if(state) plus.webview.close(plus.webview.currentWebview());
-	})
+	if (!read) {
+		// 初始化数据
+		initTime();
+		
+		// 监听点击事件
+		lib.on('.mui-icon-back', 'tap', hideAdd);
+		lib.on('#make_date', 'tap', chooseDate);
+		lib.on('#make_time', 'tap', chooseTime);
+		
+		// 监听复习模式点击
+		getReviewMode();
+		$("#Popover_1").on('tap', 'li',function() {
+			$('#reviewMode').text($(this).text())
+			                .attr("data", $(this).attr("id"))
+			                .attr("data-regulation", $(this).attr("data-regulation"));
+			$('#Popover_1').removeClass('mui-active');
+			$("#Popover_1").hide();
+		});
+		
+		// 监听类别点击
+		getTaskType();
+		$("#Popover_2").on('tap', 'li',function() {
+			$('#taskType').text($(this).text()).attr("data", $(this).attr("id"));
+			$('#Popover_2').removeClass('mui-active');
+			$("#Popover_2").hide();
+		});
+		
+		// 监听点击保存事件
+		$(".adda").on("tap", function() {
+			var state = addTask();		
+			if(state) plus.webview.close(plus.webview.currentWebview());
+		});		
+	} else {
+		$(".mui-title").text(name);
+	}
+
 });
 
 /**
@@ -60,7 +69,7 @@ function addTask() {
 	planTitle = $("#addTitle").val();
 	planDescription = $("#addContent").val();
 	
-	planTime = $("#date").text() + ":0";
+	planTime = $("#date").text() + ":00:00";
 	reviewModel = $("#reviewMode").attr("data");
 	planType = $("#taskType").attr("data");
 	console.log(planTime.split(' '));	
@@ -83,7 +92,7 @@ function addTask() {
 	for (var i = 0; i < reviewRegulation.length; i++) {
 		var beginTime = new Date(planTime).getTime() + (parseInt(reviewRegulation[i]) * 3600 * 1000);
 		beginTime = new Date(beginTime);
-		beginTime = formatDate(beginTime) + ':0';		
+		beginTime = formatDate(beginTime) + ':00:00';		
 		flowSql += '("' + lib.h.uuid() + '", "' + taskId + '", "' + (i+1) + '", "' + (0) + '", "' 
 		                       + parseInt(reviewRegulation[i]) + '", "' + beginTime + '")';
 		                       
@@ -172,4 +181,18 @@ function genModeLi(data) {
 	var regulation = data.model_regulation;	
 	var li = '<li class="mui-table-view-cell" id="' + id + '" data-regulation="'+ regulation +'" >' + title + '</li>';
 	return li;	
+}
+
+/**
+ * 查询当前任务
+ */
+function getPlanById(GUID) {
+	var sql = 'select * from tb_plan where GUID="' + GUID + '"';
+	lib.h.query(db, sql, function(res) {
+		for (var i = 0; i < res.rows.length; i++) {
+			var data = res.rows.item(i);
+			var planDescription = data.plan_description;
+			var title = data.plan_mk_time;
+		}		
+	});
 }

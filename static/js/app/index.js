@@ -1,7 +1,10 @@
 // 初始化
 mui.init({
 	swipeBack: false,
-	beforeback: back
+	beforeback: back,
+	gestureConfig: {
+		longtap: true
+	}	
 });
 
 var menu, mask = mui.createMask(_closeMenu);
