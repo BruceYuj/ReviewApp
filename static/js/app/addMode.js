@@ -1,4 +1,11 @@
 var totalHours = 0;
+var codeToCharacter = {
+	"hour": "时",
+	"day": "天",
+	"week": "周",
+	"month": "月",
+	"year": "年"
+}
 
 // 初始化
 mui.init();
@@ -6,8 +13,9 @@ mui.init();
 mui.plusReady(function() {
 	// 初始化数据
 	var update = mui.currentWebview.update;
-	$('.mui-title').text(mui.currentWebview.name);
-	if(update) initData();
+	var GUID = mui.currentWebview.GUID;
+	$('.mui-title').text(mui.currentWebview.name+(update?"(修改)":""));
+	if(update) initData(GUID);
 	
 	mui('.mui-scroll-wrapper').scroll({
 		indicators: true //是否显示滚动条
@@ -48,7 +56,12 @@ mui.plusReady(function() {
 		});		
 	});
 	$(".adda").on("tap", function() {
-		saveMode();
+		if(update) {
+			updateData(GUID);
+		} else {
+			saveMode();			
+		}
+
 	});
 });
 
@@ -60,6 +73,15 @@ function timeToHours(number, unit) {
 	if (unit == "year") return number*24*365;
 }
 
+function hoursToTime(number) {
+	if (number%24 != 0) return [number,"hour"];
+	number = number/24;
+	if (number%365 == 0) return [number/365, "year"];
+	else if (number%30 == 0) return [number/30, "month"];
+	else if (number%7 == 0) return [number/7, "week"];
+	else return [number, "day"];
+
+}
 function saveMode() {
 	var modeRegulation = [];
 	$("#scroll li").each(function() {
@@ -74,17 +96,41 @@ function saveMode() {
 	mui.back();
 }
 
-function initData() {
-	var GUID = mui.currentWebview.GUID;
+function initData(GUID) {
+	$("#scroll ul").empty();
 	console.log(GUID);
 	lib.h.query(db, 'select * from tb_review_model where GUID="' + GUID + '"', function(res) {
 		var rows= res.rows;
 		for (var i = 0; i < rows.length; i++) {
 			var row = rows.item(i);
-			var innerHTML = '<li class="mui-table-view-cell" data="' + items[1].value + '" data-unit="' + items[0].value + '">' +
-							'<span class="index">' + ($("#scroll li").length + 1) + '</span>' +
-							'<span class="time">' + items[1].text+items[0].text + '</span>' +
-					    	'</li>';
+			var id = row.GUID;
+			var modelTitle = row.model_title;
+			var modelRegulation = row.model_regulation.split(",").map(function(x) {
+				totalHours += parseInt(x);
+				return hoursToTime(parseInt(x));
+			});
+			for (var j = 0; j < modelRegulation.length; j++) {
+				var innerHTML = '<li class="mui-table-view-cell" data="' + modelRegulation[j][0] + '" data-unit="' + modelRegulation[j][1] + '">' +
+								'<span class="index">' + (j+1) + '</span>' +
+								'<span class="time">' + modelRegulation[j][0]+codeToCharacter[modelRegulation[j][1]] + '</span>' +
+						    	'</li>';
+				$("#scroll ul").append(innerHTML);
+			}
+			
 		}
+		$("#total").text("复习持续" + hourToDay(totalHours) +"天");
 	});
+}
+
+function updateData(GUID) {
+	var modeRegulation = [];
+	$("#scroll li").each(function() {
+		modeRegulation.push(timeToHours(parseInt($(this).attr("data")), $(this).attr("data-unit")));
+	});
+	modeRegulation = modeRegulation.join(",");
+	var sql = 'UPDATE tb_review_model SET model_regulation="' + modeRegulation + '" WHERE GUID="' + GUID + '"';
+	console.log(sql);
+	lib.h.update(db, sql);
+	plus.webview.currentWebview().opener().reload();
+	mui.back();
 }

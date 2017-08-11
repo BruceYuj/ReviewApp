@@ -117,8 +117,8 @@ lib.h.query = function(db, sql, func) {
 //	return type + timestamp.toString() + number;
 //}
 lib.h.uuid = function uuidv4() {
-  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,  
+  	c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   )
 };
 
@@ -130,6 +130,10 @@ function formatDate(datetime) {
 	return datetime.getFullYear() + '-' + (datetime.getMonth() + 1) + '-' + datetime.getDate() + ' ' + datetime.getHours();
 }
 
+/**
+ * 小时转换为天数，向上取值。
+ * @param {Object} number
+ */
 function hourToDay(number) {
 	return Math.ceil(number/24);
 }

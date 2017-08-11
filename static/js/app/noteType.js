@@ -1,7 +1,10 @@
 // 初始化
 mui.init({
 	swipeBack: false,
-	beforeback: back
+	beforeback: back,
+	gestureConfig: {
+		longtap: true
+	}
 });
 
 var current, menu, mask = mui.createMask(_closeMenu);
@@ -32,7 +35,20 @@ mui.plusReady(function() {
 		style: 'circle',
 		offset: '46px'
 	}, pulldownRefresh);
-	
+
+	// 长按删除
+	$("#typeList").on("longtap","li", function() {
+		var that = this;
+		var btnArray = ['否', '是'];
+		mui.confirm('确认删除？', 'Hello client', btnArray, function(e) {
+			if (e.index == 1) {
+				var sql = 'delete from tb_plan_type where GUID="' + $(that).attr("id") + '"';
+				console.log(sql);
+				lib.h.update(db, sql);
+				$(that).remove();
+			} 
+		},"div");
+	});
 });
 
 /*

@@ -91,6 +91,7 @@ function addTask() {
 	}
 	console.log(flowSql);
 	lib.h.update(db, flowSql);
+	return true;
 }
 
 
