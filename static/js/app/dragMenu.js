@@ -41,7 +41,14 @@ mui.plusReady(function () {
 	});
 	lib.on('#analysis', 'tap', function() {
 //		mui.openWindow(lib.h.normalPage('analysis', { top: '0px'}));
-		closeMenu();
+//		closeMenu();
+	});
+	lib.on('#output', 'tap', function() {
+//		db.transaction(function(tx){
+//			tx.executeSql('.output a.txt');
+//			tx.executeSql('select * from tb_plan');
+//			tx.executeSql('.ouput stdout');
+//		});
 	});
 })
 		

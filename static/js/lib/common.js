@@ -83,7 +83,7 @@ lib.h.clear = function() {
 // web sql
 lib.h.db = function(name, size) {
 	var db_name = name ? name: 'db_test';
-	var db_size = size ? size: 16;
+	var db_size = size ? size: 128;
 	
 	return openDatabase(db_name, '1.0', 'db_test', db_size * 1024 * 1024);
 };
