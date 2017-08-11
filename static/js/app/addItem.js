@@ -1,20 +1,27 @@
+/**
+ * 存储GUID到内容的映射
+ */
+var planType = {};
+var reviewModel = {};
+
 mui.init();
 mui.plusReady(function() {
-	var title = mui.currentWebview.name;
 	var read = mui.currentWebview.read;
 	var GUID = mui.currentWebview.GUID;
 	
+	getReviewMode();
+	getTaskType();
+
+	lib.on('.mui-icon-back', 'tap', hideAdd);
 	if (!read) {
 		// 初始化数据
 		initTime();
 		
 		// 监听点击事件
-		lib.on('.mui-icon-back', 'tap', hideAdd);
 		lib.on('#make_date', 'tap', chooseDate);
 		lib.on('#make_time', 'tap', chooseTime);
 		
-		// 监听复习模式点击
-		getReviewMode();
+		// 监听复习模式点击		
 		$("#Popover_1").on('tap', 'li',function() {
 			$('#reviewMode').text($(this).text())
 			                .attr("data", $(this).attr("id"))
@@ -24,7 +31,6 @@ mui.plusReady(function() {
 		});
 		
 		// 监听类别点击
-		getTaskType();
 		$("#Popover_2").on('tap', 'li',function() {
 			$('#taskType').text($(this).text()).attr("data", $(this).attr("id"));
 			$('#Popover_2').removeClass('mui-active');
@@ -37,7 +43,9 @@ mui.plusReady(function() {
 			if(state) plus.webview.close(plus.webview.currentWebview());
 		});		
 	} else {
-		$(".mui-title").text(name);
+		$(".mui-title").text("查看任务详情");
+		$(".adda").hide();
+		getPlanById(GUID);
 	}
 
 });
@@ -149,7 +157,13 @@ function getReviewMode() {
 	lib.h.query(db, 'select * from tb_review_model order by GUID desc', function(res) {
 		$("#Popover_1 ul").empty();
 		for (var i = 0; i < res.rows.length; i++) {
-			var li = genModeLi(res.rows.item(i));
+			var data = res.rows.item(i);
+			var id = data.GUID;
+			var title = data.model_title;
+			var regulation = data.model_regulation;	
+			var li = '<li class="mui-table-view-cell" id="' + id +
+			         '" data-regulation="'+ regulation +'" >' + title + '</li>';
+			reviewModel[id] = title;
 			$("#Popover_1 ul").append(li);
 		}
 	});	
@@ -167,20 +181,10 @@ function getTaskType() {
 			var title = data.plan_type_title;
 			var li = '<li class="mui-table-view-cell" id="' + id + '" >' + title + '</li>';
 			console.log(li);
+			planType[id] = title;
 			$("#Popover_2 ul").append(li);
 		}
 	});	
-}
-
-/*
- * 生成review mode的HTML 字符串
- */
-function genModeLi(data) {
-	var id = data.GUID;
-	var title = data.model_title;
-	var regulation = data.model_regulation;	
-	var li = '<li class="mui-table-view-cell" id="' + id + '" data-regulation="'+ regulation +'" >' + title + '</li>';
-	return li;	
 }
 
 /**
@@ -191,8 +195,12 @@ function getPlanById(GUID) {
 	lib.h.query(db, sql, function(res) {
 		for (var i = 0; i < res.rows.length; i++) {
 			var data = res.rows.item(i);
-			var planDescription = data.plan_description;
-			var title = data.plan_mk_time;
+			$("#addTitle").val(data.plan_title).attr("disabled", "disabled");
+			$("#addContent").val(data.plan_description).attr("disabled", "disabled");
+			$("#date").text(data.plan_mk_time.split(":")[0]).attr("href",":;");
+			$("#reviewMode").text(reviewModel[data.review_model]).attr("href",":;");
+			$("#taskType").text(planType[data.plan_type]).attr("href",":;");
+			
 		}		
 	});
 }

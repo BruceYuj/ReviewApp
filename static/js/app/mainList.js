@@ -36,7 +36,6 @@ mui.plusReady(function() {
 			url: "addItem.html",
 			id: "addItem",
 			extras: {
-				name: $(this).find("p").text() + "(查看)",
 				read: true,
 				GUID: $(this).attr("data") 
 			}

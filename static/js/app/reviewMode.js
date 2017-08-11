@@ -7,7 +7,8 @@ mui.init({
 	}
 });
 
-var current, menu, mask = mui.createMask(_closeMenu);
+var current, menu;
+var mask = mui.createMask(_closeMenu);
 var showMenu = false;
 mui.plusReady(function() {
 	initList();

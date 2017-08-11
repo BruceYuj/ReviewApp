@@ -22,15 +22,25 @@ mui.plusReady(function () {
 
 	});
 	lib.on('#noteType', 'tap', function() {
-		mui.openWindow(lib.h.normalPage('noteType', { top: '0px'}));
 		closeMenu();
+		var noteWebview = plus.webview.getWebviewById("noteType");
+		if(noteWebview){
+//			noteWebview.evalJS("mask.close();");
+			noteWebview.reload(true);
+		}
+		mui.openWindow(lib.h.normalPage('noteType', { top: '0px'}));
 	});
 	lib.on('#reviewMode', 'tap', function() {
-		mui.openWindow(lib.h.normalPage('reviewMode', { top: '0px'}));
 		closeMenu();
+		var reviewWebview = plus.webview.getWebviewById("reviewMode");
+		if(reviewWebview) {
+//			reviewWebview.evalJS("mask.close();");
+			reviewWebview.reload(true);
+		}
+		mui.openWindow(lib.h.normalPage('reviewMode', { top: '0px'}));
 	});
 	lib.on('#analysis', 'tap', function() {
-		mui.openWindow(lib.h.normalPage('analysis', { top: '0px'}));
+//		mui.openWindow(lib.h.normalPage('analysis', { top: '0px'}));
 		closeMenu();
 	});
 })
