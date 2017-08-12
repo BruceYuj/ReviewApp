@@ -44,11 +44,56 @@ mui.plusReady(function () {
 //		closeMenu();
 	});
 	lib.on('#output', 'tap', function() {
-//		db.transaction(function(tx){
-//			tx.executeSql('.output a.txt');
-//			tx.executeSql('select * from tb_plan');
-//			tx.executeSql('.ouput stdout');
-//		});
+		var btnArray = ['否', '是'];
+		mui.confirm('确认导出？', 'Hello client', btnArray, function(e) {
+			if (e.index == 1) {
+				plus.nativeUI.showWaiting("导出中...");
+				plus.io.requestFileSystem(plus.io.PUBLIC_DOCUMENTS, function(fs){
+					var now = new Date();
+					var fileName = 'database' + now.getFullYear() + (now.getMonth()+1)
+									+ now.getDay() +'.sql';
+					fs.root.getFile(fileName,{create:true}, function(fileEntry){
+						fileEntry.createWriter( function (writer) {
+							writer.onwrite = function (e) {
+								plus.nativeUI.closeWaiting();
+							};
+							websqldump.export({
+							  database: 'db_test',
+							  linebreaks: true,
+							  success: function(sql) {					
+								writer.seek(writer.length);
+								writer.write(sql);
+							  }
+							});
+						}, function (e) {
+							alert(e.message);
+						});
+					});
+				});
+			} 
+		},"div");
+	});
+
+	lib.on('#clear', 'tap', function() {
+		var btnArray = ['否', '是'];
+		mui.confirm('确认清除部分已完成数据？', 'Hello client', btnArray, function(e) {
+			if (e.index == 1) {
+				plus.nativeUI.showWaiting("清理中...");
+				plus.io.requestFileSystem(plus.io.PUBLIC_DOCUMENTS, function(fs){		
+					fs.root.getFile('a.sql',{create:true}, function(fileEntry){
+						fileEntry.createWriter( function (writer) {
+							writer.onwrite = function (e) {
+								plus.nativeUI.closeWaiting();
+							};
+							// write some data
+							
+						}, function (e) {
+							alert(e.message );
+						});
+					});
+				});
+			} 
+		},"div");
 	});
 })
 		
