@@ -23,7 +23,8 @@ mui.plusReady(function() {
 		var btnArray = ['否', '是'];
 		mui.confirm('确认完成当前任务？', 'Hello client', btnArray, function(e) {
 			if (e.index == 1) {
-				var sql = 'UPDATE tb_plan_flow SET finish_state=1 WHERE GUID="' + $(that).attr("id") + '"';
+				var sql = 'UPDATE tb_plan_flow SET finish_state=1, finish_time="' + 
+							formatDate(new Date()) + ':00:00'+ '" WHERE GUID="' + $(that).attr("id") + '"';
 				console.log(sql);
 				lib.h.update(db, sql);
 				$(that).remove();
@@ -46,10 +47,10 @@ mui.plusReady(function() {
 function initHelp() {
 	var help = lib.h.getItem('help');
 	if (help == null) {
-		lib.h.update(db, 'create table if not exists tb_plan (GUID TEXT unique, plan_title TEXT, plan_description TEXT, plan_mk_time DATETIME, review_model TEXT, plan_type TEXT)');
+		lib.h.update(db, 'create table if not exists tb_plan (GUID TEXT unique, plan_title TEXT, plan_description TEXT, plan_mk_time DATETIME, review_model TEXT, plan_type TEXT, plan_state INTEGER)');
 		lib.h.update(db, 'create table if not exists tb_review_model (GUID TEXT unique, model_title TEXT, model_regulation TEXT)');
 		lib.h.update(db, 'create table if not exists tb_plan_type (GUID TEXT unique, plan_type_title TEXT)');
-		lib.h.update(db, 'create table if not exists tb_plan_flow (GUID TEXT unique, plan_id TEXT, review_time INTEGER, finish_state INTEGER, time_interval INTEGER, begin_time DATETIME)');
+		lib.h.update(db, 'create table if not exists tb_plan_flow (GUID TEXT unique, plan_id TEXT, review_time INTEGER, finish_state INTEGER, time_interval INTEGER, begin_time DATETIME, finish_time DATETIME)');
 
 		// 初始化plan_type表
 		var planTypeId = lib.h.uuid();
@@ -82,7 +83,6 @@ function initList(planType) {
 //			console.log(res.rows.item(i).plan_title);
 //			console.log(res.rows.item(i).review_time);
 //			console.log(res.rows.item(i).begin_time);
-			
 			var str = '';
 			str +=  '<li class="mui-table-view-cell" id="' + res.rows.item(i).GUID +'" data="' + res.rows.item(i).plan_id + '">' +
 				    '<div class="plan">' +
@@ -112,16 +112,4 @@ function pulldownRefresh() {
 	}, 1000);
 }
 
-/**
- * 获取plan的类别 
- */
-function getPlanType() {
-	var result = {};
-	lib.h.query(db, 'select * from tb_plan_type', function(res) {
-		var data = res.rows;
-		for (var i = 0; i < res.rows.length; i++) {
-			result[data.item(i).GUID] = data.item(i).plan_type_title; 
-		}
-	});
-	return result;
-}
+

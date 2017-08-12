@@ -143,6 +143,34 @@ function formatDate(datetime) {
 function hourToDay(number) {
 	return Math.ceil(number/24);
 }
+/**
+ * 获取plantype ID和 title的映射 
+ */
+function getPlanType() {
+	var result = {};
+	lib.h.query(db, 'select * from tb_plan_type', function(res) {
+		var data = res.rows;
+		for (var i = 0; i < res.rows.length; i++) {
+//			console.log(data.item(i).GUID + ':' + data.item(i).plan_type_title);
+			result[data.item(i).GUID] = data.item(i).plan_type_title; 
+		}
+	});
+	return result;
+}
 
+/**
+ * 获取reviewModel ID和 title的映射 
+ */
+function getReviewModel() {
+	var result = {};
+	lib.h.query(db, 'select * from tb_review_model', function(res) {
+		var data = res.rows;
+		for (var i = 0; i < res.rows.length; i++) {
+//			console.log(data.item(i).GUID + ':' + data.item(i).plan_type_title);
+			result[data.item(i).GUID] = data.item(i).model_title; 
+		}
+	});
+	return result;
+}
 //存储公共变量
 var db = lib.h.db();

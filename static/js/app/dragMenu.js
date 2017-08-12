@@ -21,6 +21,7 @@ mui.plusReady(function () {
 		main.show();
 
 	});
+	
 	lib.on('#noteType', 'tap', function() {
 		closeMenu();
 		var noteWebview = plus.webview.getWebviewById("noteType");
@@ -30,6 +31,7 @@ mui.plusReady(function () {
 		}
 		mui.openWindow(lib.h.normalPage('noteType', { top: '0px'}));
 	});
+	
 	lib.on('#reviewMode', 'tap', function() {
 		closeMenu();
 		var reviewWebview = plus.webview.getWebviewById("reviewMode");
@@ -39,62 +41,22 @@ mui.plusReady(function () {
 		}
 		mui.openWindow(lib.h.normalPage('reviewMode', { top: '0px'}));
 	});
+	
 	lib.on('#analysis', 'tap', function() {
 //		mui.openWindow(lib.h.normalPage('analysis', { top: '0px'}));
 //		closeMenu();
 	});
+	
 	lib.on('#output', 'tap', function() {
-		var btnArray = ['否', '是'];
-		mui.confirm('确认导出？', 'Hello client', btnArray, function(e) {
-			if (e.index == 1) {
-				plus.nativeUI.showWaiting("导出中...");
-				plus.io.requestFileSystem(plus.io.PUBLIC_DOCUMENTS, function(fs){
-					var now = new Date();
-					var fileName = 'database' + now.getFullYear() + (now.getMonth()+1)
-									+ now.getDay() +'.sql';
-					fs.root.getFile(fileName,{create:true}, function(fileEntry){
-						fileEntry.createWriter( function (writer) {
-							writer.onwrite = function (e) {
-								plus.nativeUI.closeWaiting();
-							};
-							websqldump.export({
-							  database: 'db_test',
-							  linebreaks: true,
-							  success: function(sql) {					
-								writer.seek(writer.length);
-								writer.write(sql);
-							  }
-							});
-						}, function (e) {
-							alert(e.message);
-						});
-					});
-				});
-			} 
-		},"div");
+		closeMenu();
+		var dataSave = plus.webview.getWebviewById("dataSave");
+		if(dataSave) {
+			dataSave.evalJS("mask.close();");
+//			dataSave.reload(true);
+		}
+		mui.openWindow(lib.h.normalPage('dataSave', { top: '0px'}));
 	});
 
-	lib.on('#clear', 'tap', function() {
-		var btnArray = ['否', '是'];
-		mui.confirm('确认清除部分已完成数据？', 'Hello client', btnArray, function(e) {
-			if (e.index == 1) {
-				plus.nativeUI.showWaiting("清理中...");
-				plus.io.requestFileSystem(plus.io.PUBLIC_DOCUMENTS, function(fs){		
-					fs.root.getFile('a.sql',{create:true}, function(fileEntry){
-						fileEntry.createWriter( function (writer) {
-							writer.onwrite = function (e) {
-								plus.nativeUI.closeWaiting();
-							};
-							// write some data
-							
-						}, function (e) {
-							alert(e.message );
-						});
-					});
-				});
-			} 
-		},"div");
-	});
 })
 		
 function closeMenu () {
