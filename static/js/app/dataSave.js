@@ -29,7 +29,7 @@ mui.plusReady(function() {
 				plus.io.requestFileSystem(plus.io.PUBLIC_DOCUMENTS, function(fs){
 					var now = new Date();
 					var fileName = 'database' + now.getFullYear() + (now.getMonth()+1)
-									+ now.getDay() +'.sql';
+									+ now.getDate() +'.sql';
 					fs.root.getFile(fileName,{create:true}, function(fileEntry){
 						fileEntry.createWriter( function (writer) {
 							writer.onwrite = function (e) {
@@ -60,7 +60,7 @@ mui.plusReady(function() {
 				plus.io.requestFileSystem(plus.io.PUBLIC_DOCUMENTS, function(fs){
 					var now = new Date();
 					var fileName = '任务归档' + now.getFullYear() + (now.getMonth()+1)
-									+ now.getDay() +'.txt';
+									+ now.getDate() +'.txt';
 					fs.root.getFile(fileName,{create:true}, function(fileEntry){
 						fileEntry.createWriter( function (writer) {
 							writer.onwrite = function (e) {
