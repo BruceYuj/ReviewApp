@@ -40,7 +40,10 @@ mui.plusReady(function() {
 		// 监听点击保存事件
 		$(".adda").on("tap", function() {
 			var state = addTask();		
-			if(state) plus.webview.close(plus.webview.currentWebview());
+			if(state) {
+				plus.webview.currentWebview().opener().reload();
+				plus.webview.close(plus.webview.currentWebview());
+			}
 		});		
 	} else {
 		$(".mui-title").text("查看任务详情");

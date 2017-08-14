@@ -1,4 +1,4 @@
-#todoList  {
+#todoList,#finishedTask  {
 	margin: 10px;
 	border-radius: 10px;
 }
@@ -16,4 +16,12 @@
 .plan-type {
 	display: flex;
 	align-items: center;
+}
+
+#finishedTask ul {
+	background-color: #EE8523;
+}
+
+#finishedTask ul p {
+	color: black;
 }

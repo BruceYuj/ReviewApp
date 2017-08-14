@@ -7,6 +7,7 @@ mui.plusReady(function() {
 	//初次登录展示功能
 	initHelp();
 	initList(planType);
+	updateFinishedTasks(planType);
 	
 	// 下拉刷新
 	current.setPullToRefresh({
@@ -27,7 +28,7 @@ mui.plusReady(function() {
 							formatDate(new Date()) + ':00:00'+ '" WHERE GUID="' + $(that).attr("id") + '"';
 				console.log(sql);
 				lib.h.update(db, sql);
-				$(that).remove();
+				$(that).appendTo("#finishedTask ul");
 			} 
 		},"div");
 	});
@@ -66,6 +67,56 @@ function initHelp() {
 }
 
 /**
+ * update finished tasks
+ */
+function updateFinishedTasks(planType) {
+	
+	var $list = $('#finishedTask ul').empty();
+	var now = formatDate(new Date()) + ':00:00';
+	var sql = 'SELECT plan_id,tb_plan_flow.GUID, plan_title, plan_type, review_time, begin_time FROM tb_plan INNER JOIN tb_plan_flow ON ' +
+			  'tb_plan.GUID = tb_plan_flow.plan_id AND finish_time >="' + now.split(" ")[0]+' 00:00:00' + '" AND finish_time <="' + now + 
+			  '" AND finish_state = 1 ORDER BY finish_time DESC';
+	console.log(now);
+	lib.h.query(db, sql, function(res) {
+//		console.log(res.rows.length);
+		for (var i = 0; i < res.rows.length; i++) {
+//			console.log(res.rows.item(i).plan_id);
+//			console.log(res.rows.item(i).GUID);
+//			console.log(res.rows.item(i).plan_title);
+//			console.log(res.rows.item(i).review_time);
+//			console.log(res.rows.item(i).begin_time);
+			var str = '';
+			str +=  '<li class="mui-table-view-cell" id="' + res.rows.item(i).GUID +'" data="' + res.rows.item(i).plan_id + '">' +
+				    '<div class="plan">' +
+					'<div class="plan-content">' +
+					'<div>' +
+					'<span>第' + res.rows.item(i).review_time + '次 </span>' + 
+					'<span>' + res.rows.item(i).begin_time + '</span>' +
+					'</div>' +
+					'<p>' + res.rows.item(i).plan_title + '<p>' +
+					'</div>' +
+					'<div class="plan-type">' + planType[res.rows.item(i).plan_type] + '</div>' +						
+					'</div>' +
+					'</li>';
+			$("#finishedTask ul").append(str);
+
+		}
+	});
+}
+
+/**
+ * 下拉刷新具体业务实现
+*/
+function pulldownRefresh() {
+	setTimeout(function() {
+		initList(planType);
+		updateFinishedTasks(planType);
+		current.endPullToRefresh();
+	}, 1000);
+}
+
+
+/**
  * 初始化今日待办
  */
 function initList(planType) {
@@ -101,15 +152,3 @@ function initList(planType) {
 		}
 	});
 }
-
-/**
- * 下拉刷新具体业务实现
-*/
-function pulldownRefresh() {
-	setTimeout(function() {
-		initList(planType);
-		current.endPullToRefresh();
-	}, 1000);
-}
-
-
