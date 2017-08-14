@@ -30,8 +30,17 @@ var option = {
 var myChart;
 
 mui.init();
-
+var menu, mask = mui.createMask(_closeMenu);
+var showMenu = false;
 mui.plusReady(function () {
+	menu = plus.webview.getWebviewById('menu');
+	
+	lib.on('.menua', 'tap', openMenu);
+	// type页面滑动操作，关闭开启菜单页面
+	window.addEventListener('swiperight', openMenu);
+	window.addEventListener('swipeleft', closeMenu);
+	// menu页面向左滑动，关闭菜单
+	window.addEventListener("menu:swipeleft", closeMenu);
 
 });
 

@@ -43,8 +43,13 @@ mui.plusReady(function () {
 	});
 	
 	lib.on('#analysis', 'tap', function() {
-//		mui.openWindow(lib.h.normalPage('analysis', { top: '0px'}));
-//		closeMenu();
+		closeMenu();
+		var analysisWebview = plus.webview.getWebviewById("analysis");
+		if(analysisWebview) {
+//			reviewWebview.evalJS("mask.close();");
+			analysisWebview.reload(true);
+		}
+		mui.openWindow(lib.h.normalPage('analysis', { top: '0px'}));
 	});
 	
 	lib.on('#output', 'tap', function() {
