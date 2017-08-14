@@ -33,7 +33,7 @@ mui.plusReady(function() {
 		},"div");
 	});
 	// 点击查看任务详情
-	$("#todoList").on("tap","li", function() {
+	$("#todoList,#finishedTask").on("tap","li", function() {
 		mui.openWindow({
 			url: "addItem.html",
 			id: "addItem",
