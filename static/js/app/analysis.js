@@ -48,10 +48,21 @@ mui.plusReady(function () {
 });
 
 $(function() {
+	var planType, reviewModel;
 	// 基于准备好的dom，初始化echarts实例
     myChart = echarts.init(document.getElementById('main'));
     
     showData("day");
+    
+    var promise2 = new Promise(function (resolve, reject) {
+    	planType = getPlanType();
+		if (planType) resolve("success");
+    });
+    var promise1 = new Promise(function (resolve, reject) {
+    	reviewModel = getReviewModel();
+    	if (reviewModel) resolve("success");
+    });
+    Promise.all([promise2, promise1]).then(getTaskInfo(planType, reviewModel));
     
 	mui('.mui-scroll-wrapper').scroll();
 	
@@ -59,7 +70,20 @@ $(function() {
 	$("body").on("tap",".mui-popover li a", function() {
 		console.log($(this).attr("id"));
 		showData($(this).attr("id"));
+		Promise.all([promise2, promise1]).then(getTaskInfo(planType, reviewModel, $(this).attr("id")));
 		mui("#topPopover").popover("toggle");//show hide toggle
+	});
+	
+	// 点击查看任务详情
+	$("#scroll").on("tap","li", function() {
+		mui.openWindow({
+			url: "addItem.html",
+			id: "addItem",
+			extras: {
+				read: true,
+				GUID: $(this).attr("data") 
+			}
+		});
 	});
 
 });
@@ -121,5 +145,61 @@ function showData(type) {
 	    // 使用指定的配置项和数据显示图表。
 		myChart.setOption(option);		
 	});
+}
+
+function getTaskInfo(planType, reviewModel,type) {
+	$('#scroll ul').empty();
+	var now = formatDate(new Date()) + ':00:00';
+	var sql = 'SELECT  plan_id, plan_title, plan_type, review_model, count(tb_plan.GUID) as s FROM tb_plan INNER JOIN tb_plan_flow ON ' +
+			  'tb_plan.GUID = tb_plan_flow.plan_id AND';
+	if (type == "week") {
+		var now = new Date();
+		var monday = new Date();
+		var sunday = new Date();
+		monday.setDate(now.getDate() - (now.getDay() - 1));
+		sunday.setDate(now.getDate() + (7 - now.getDay()));
+		monday = formatDate(monday).split(" ")[0];
+		sunday = formatDate(sunday).split(" ")[0];
+		sql += ' finish_time>="' + (monday + ' 00:00:00') + '" AND finish_time<="' + (sunday + ' 23:59:59') + '"'+
+			   ' GROUP BY plan_id ORDER BY finish_time DESC';
+	} else if (type == "month") {
+		var now = new Date();
+		var firstDay = new Date();
+		var lastDay = new Date();
+		
+		firstDay.setDate(1);
+		lastDay.setMonth(lastDay.getMonth()+1);
+		lastDay.setDate(0);
+		
+		firstDay = formatDate(firstDay).split(" ")[0];
+		lastDay = formatDate(lastDay).split(" ")[0];
+		
+		sql += ' finish_time between  "' + (firstDay + ' 00:00:00') + '" and "' + (lastDay + ' 23:59:59') + '"'+
+			   'GROUP BY plan_id ORDER BY finish_time DESC';		
+	} else {
+		sql += ' finish_time >="' + now.split(" ")[0]+' 00:00:00' + '" AND finish_time <="' + now +
+			   '" AND finish_state = 1 GROUP BY plan_id ORDER BY finish_time DESC';
+	}		  
+	console.log(sql);
+	lib.h.query(db, sql, function(res) {
+		console.log('test:'+res.rows.length);
+		for (var i = 0; i < res.rows.length; i++) {
+			console.log(res.rows[i].plan_type);
+			var li = 	'<li class="mui-table-view-cell" data="' + res.rows[i].plan_id + '">' +
+						'<div class="plan">' +
+						'<div class="plan-content">' +
+						'<div>' + 
+						'<span>已完成/未完成 : </span>' +
+						'<span>' + res.rows[i].s + '/' + reviewModel[res.rows[i].review_model + '_regulation'].split(',').length +  '</span>' +
+						'</div>' + 
+						'<p>' + res.rows[i].plan_title + '<p>' +
+						'</div>' +
+						'<div class="plan-type">' + planType[res.rows[i].plan_type] + '</div>'	+					
+						'</div>' +
+						'</li>';
+			console.log(li);
+			$('#scroll ul').append(li);
+		}
+	});	
 }
 

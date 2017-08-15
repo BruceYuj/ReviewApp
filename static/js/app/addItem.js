@@ -65,6 +65,7 @@ function initTime() {
  * close current webview
  */
 function hideAdd() {
+	plus.webview.currentWebview().opener().reload();
 	plus.webview.close(plus.webview.currentWebview());
 }
 
@@ -96,7 +97,7 @@ function addTask() {
 	var sql = 'insert into tb_plan (GUID, plan_type, plan_title, plan_description, plan_mk_time, review_model) ' + 
 			'values ("' + taskId +'", "' + planType + '","' + planTitle + '", "' + planDescription +'", "'
 			+ planTime +'", "' + reviewModel +'")';
-	console.log(sql);
+//	console.log(sql);
 	lib.h.update(db, sql);
 
 	var flowSql = 'insert into tb_plan_flow (GUID, plan_id, review_time, finish_state, time_interval, begin_time) values ';

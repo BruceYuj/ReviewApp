@@ -168,6 +168,7 @@ function getReviewModel() {
 		for (var i = 0; i < res.rows.length; i++) {
 //			console.log(data.item(i).GUID + ':' + data.item(i).plan_type_title);
 			result[data.item(i).GUID] = data.item(i).model_title; 
+			result[data.item(i).GUID + '_regulation'] = data.item(i).model_regulation;
 		}
 	});
 	return result;
