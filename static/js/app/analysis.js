@@ -29,7 +29,10 @@ var option = {
 };
 var myChart;
 
-mui.init();
+mui.init({
+	swipeBack: false,
+	beforeback: back
+});
 var menu, mask = mui.createMask(_closeMenu);
 var showMenu = false;
 mui.plusReady(function () {
@@ -67,8 +70,9 @@ function showData(type) {
 	var undoneTaskSql = 'select count(*) as c from tb_plan_flow where finish_state=0';
 	if (type == "day") {
 		var now = formatDate(new Date()).split(" ")[0];
-		finishTaskSql += ' and begin_time between  "' + (now + ' 00:00:00') + '" and "' + (now + ' 23:59:59') + '"';
-		undoneTaskSql += ' and begin_time between  "' + (now + ' 00:00:00') + '" and "' + (now + ' 23:59:59') + '"';
+		finishTaskSql += ' and finish_time between  "' + (now + ' 00:00:00') + '" and "' + (now + ' 23:59:59') + '"';
+		undoneTaskSql += ' and begin_time<= "' + (now + ' 23:59:59') + '"';
+		console.log(finishTaskSql);
 	} else if(type == "week"){
 		var now = new Date();
 		var monday = new Date();
@@ -78,8 +82,8 @@ function showData(type) {
 		monday = formatDate(monday).split(" ")[0];
 		sunday = formatDate(sunday).split(" ")[0];
 		
-		finishTaskSql += ' and begin_time between  "' + (monday + ' 00:00:00') + '" and "' + (sunday + ' 23:59:59') + '"';
-		undoneTaskSql += ' and begin_time between  "' + (monday + ' 00:00:00') + '" and "' + (sunday + ' 23:59:59') + '"';
+		finishTaskSql += ' and finish_time between  "' + (monday + ' 00:00:00') + '" and "' + (sunday + ' 23:59:59') + '"';
+		undoneTaskSql += ' and begin_time<="' + (sunday + ' 23:59:59') + '"';
 	} else if (type == "month") {
 		var now = new Date();
 		var firstDay = new Date();
@@ -93,8 +97,8 @@ function showData(type) {
 		lastDay = formatDate(lastDay).split(" ")[0];
 		
 //		console.log(firstDay + ',' + lastDay);
-		finishTaskSql += ' and begin_time between  "' + (firstDay + ' 00:00:00') + '" and "' + (lastDay + ' 23:59:59') + '"';
-		undoneTaskSql += ' and begin_time between  "' + (firstDay + ' 00:00:00') + '" and "' + (lastDay + ' 23:59:59') + '"';
+		finishTaskSql += ' and finish_time between  "' + (firstDay + ' 00:00:00') + '" and "' + (lastDay + ' 23:59:59') + '"';
+		undoneTaskSql += ' and begin_time<="'+ (lastDay + ' 23:59:59') + '"';
 	}
 	
 	var asyncQueryFinish = new Promise(function (resolve, reject) {
