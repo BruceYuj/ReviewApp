@@ -8,7 +8,7 @@ function back() {
 		return false;
 	} else {
 		// 菜单处于隐藏状态，执行返回时，回退到主页面
-		var main = plus.webview.getWebviewById('HBuilder');
+		var main = plus.webview.getWebviewById('H5EFE5685');
 		main.evalJS('mask.close();')
 		setTimeout(function() {
 			main.show();			
