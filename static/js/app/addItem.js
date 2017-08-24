@@ -172,9 +172,9 @@ function getReviewMode() {
 			         '" data-regulation="'+ regulation +'" >' + title + '</li>';
 			reviewModel[id] = title;
 			$("#Popover_1 .mui-scroll").append(li);
-			var height = $("#Popover_1 li").length * 25 + 10);
+			var height = $("#Popover_1 li").length * 25 + 10;
 			if (height>200) height = 200;
-			$("#Popover_1 .mui-scroll-wrapper").css("height", (height + "px");
+			$("#Popover_1 .mui-scroll-wrapper").css("height", (height + "px"));
 		}
 	});	
 }
@@ -194,9 +194,9 @@ function getTaskType() {
 			planType[id] = title;
 			$("#Popover_2 .mui-scroll").append(li);
 		}
-		var height = $("#Popover_2 li").length * 25 + 10);
+		var height = $("#Popover_2 li").length * 25 + 10;
 		if (height>200) height = 200;
-		$("#Popover_2 .mui-scroll-wrapper").css("height", (height + "px");
+		$("#Popover_2 .mui-scroll-wrapper").css("height", (height + "px"));
 	});	
 }
 
