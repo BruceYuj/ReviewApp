@@ -6,6 +6,9 @@ var reviewModel = {};
 
 mui.init();
 mui.plusReady(function() {
+	mui('.mui-scroll-wrapper').scroll({
+	});
+	
 	var read = mui.currentWebview.read;
 	var GUID = mui.currentWebview.GUID;
 	
@@ -159,7 +162,7 @@ function chooseTime() {
  */
 function getReviewMode() {
 	lib.h.query(db, 'select * from tb_review_model order by GUID desc', function(res) {
-		$("#Popover_1 ul").empty();
+		$("#Popover_1 .mui-scroll").empty();
 		for (var i = 0; i < res.rows.length; i++) {
 			var data = res.rows.item(i);
 			var id = data.GUID;
@@ -168,7 +171,8 @@ function getReviewMode() {
 			var li = '<li class="mui-table-view-cell" id="' + id +
 			         '" data-regulation="'+ regulation +'" >' + title + '</li>';
 			reviewModel[id] = title;
-			$("#Popover_1 ul").append(li);
+			$("#Popover_1 .mui-scroll").append(li);
+
 		}
 	});	
 }
@@ -178,7 +182,7 @@ function getReviewMode() {
  */
 function getTaskType() {
 	lib.h.query(db, 'select * from tb_plan_type order by GUID desc', function(res) {
-		$("#Popover_2 ul").empty();
+		$("#Popover_2 .mui-scroll").empty();
 		for (var i = 0; i < res.rows.length; i++) {
 			var data = res.rows.item(i);
 			var id = data.GUID;
@@ -186,7 +190,7 @@ function getTaskType() {
 			var li = '<li class="mui-table-view-cell" id="' + id + '" >' + title + '</li>';
 			console.log(li);
 			planType[id] = title;
-			$("#Popover_2 ul").append(li);
+			$("#Popover_2 .mui-scroll").append(li);
 		}
 	});	
 }

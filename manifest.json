@@ -3,7 +3,7 @@
 	"id": "H5EFE5685",/*应用的标识，创建应用时自动生成，勿手动修改*/
 	"name": "复习软件",/*应用名称，程序桌面图标名称*/
 	"version": {
-		"name": "1.0.0",/*应用版本名称*/
+		"name": "1.0.1",/*应用版本名称*/
 		"code": "83"
 	},
 	"description": "用于监控自己的知识复习周期",/*应用描述信息*/
@@ -184,8 +184,8 @@
 					"mdpi": "", /*普通屏启动图片，分辨率：240x282*/
 					"ldpi": "", /*大屏启动图片，分辨率：320x442*/
 					 /*高分屏启动图片，分辨率：480x762*/
-					"xhdpi": "C:/Users/Jun/Desktop/2.png", /*720P高分屏启动图片，分辨率：720x1242*/
-					"xxhdpi": "C:/Users/Jun/Desktop/1.png","hdpi":"C:/Users/Jun/Desktop/3.png"
+					"xhdpi": "static/image/start2.png", /*720P高分屏启动图片，分辨率：720x1242*/
+					"xxhdpi": "static/image/start1.png"
 				}
 			}
 		}
@@ -260,7 +260,8 @@
 				"refer": [
 					"view/noteType.html",
 					"view/analysis.html",
-					"view/reviewMode.html"
+					"view/reviewMode.html",
+					"view/dataSave.html"
 				],
 				"priority": 0
 			},
@@ -331,6 +332,20 @@
 				"refer": [
 					"view/addItem.html"
 				],
+				"priority": 0
+			},
+			"view/dataSave.html": {
+				"resources": [
+					"static/js/app/dataSave.js",
+					"static/js/lib/common.js",
+					"static/js/mui.min.js",
+					"static/fonts/mui.ttf",
+					"static/js/lib/jquery-1.11.2.min.js",
+					"static/js/lib/websqldump.js",
+					"static/css/mui.min.css",
+					"static/js/app/menuCommon.js"
+				],
+				"refer": [],
 				"priority": 0
 			}
 		},

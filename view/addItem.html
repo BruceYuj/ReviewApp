@@ -13,6 +13,12 @@
 			.mui-bar-popover {
 				width: 30%;
 			}
+			.mui-scroll-wrapper {
+				top:inherit; 
+				max-height:214px;
+				min-height:30px;
+				background-color:white;
+			}
 		</style>
 	</head>
 
@@ -48,18 +54,27 @@
 
 			</ul>
 		</div>
-		<div id="Popover_1" class="mui-popover mui-bar-popover">
+		<div id="Popover_1" class="mui-popover mui-bar-popover" style="width: 40%;">
 			<div class="mui-popover-arrow"></div>
-			<ul class="mui-table-view" style="width: 150px;">
-				<li class="mui-table-view-cell"><a href="#">艾宾浩斯复习</a></li>
+			<ul style="width: 200px;">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<!--这里放置真实显示的DOM内容-->
+						<!--<li class="mui-table-view-cell"><a href="#">功能展示</a></li>-->
+					</div>
+				</div>	
 			</ul>
 		</div>
 		<div id="Popover_2" class="mui-popover mui-bar-popover">
 			<div class="mui-popover-arrow"></div>
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell"><a href="#">功能展示</a>
-				</li>
-			</ul>
+				<ul>
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<!--这里放置真实显示的DOM内容-->
+							<!--<li class="mui-table-view-cell"><a href="#">功能展示</a></li>-->
+						</div>
+					</div>					
+				</ul>
 		</div>
 		<!-- mui -->
 		<script type="text/javascript" src="../static/js/mui.min.js"></script>
