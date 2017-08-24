@@ -172,7 +172,7 @@ function getReviewMode() {
 			         '" data-regulation="'+ regulation +'" >' + title + '</li>';
 			reviewModel[id] = title;
 			$("#Popover_1 .mui-scroll").append(li);
-
+			$("#Popover_1 .mui-scroll-wrapper").css("height", ($("#Popover_1 li").length * 25 + 10) + "px");
 		}
 	});	
 }
@@ -192,6 +192,7 @@ function getTaskType() {
 			planType[id] = title;
 			$("#Popover_2 .mui-scroll").append(li);
 		}
+		$("#Popover_2 .mui-scroll-wrapper").css("height", ($("#Popover_2 li").length * 25 + 10) + "px");
 	});	
 }
 
