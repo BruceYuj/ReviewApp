@@ -36,18 +36,13 @@ mui.plusReady(function() {
 		offset: '46px'
 	}, pulldownRefresh);
 
-	// 长按删除
-	$("#typeList").on("longtap","li", function() {
-		var that = this;
-		var btnArray = ['否', '是'];
-		mui.confirm('确认删除？', 'Hello client', btnArray, function(e) {
-			if (e.index == 1) {
-				var sql = 'delete from tb_plan_type where GUID="' + $(that).attr("id") + '"';
-				console.log(sql);
-				lib.h.update(db, sql);
-				$(that).remove();
-			} 
-		},"div");
+	// 左滑删除
+	$("#typeList").on("tap",".delete", function() {
+		var that = $(this).parents("li");
+		var sql = 'delete from tb_plan_type where GUID="' + that.attr("id") + '"';
+		console.log(sql);
+		lib.h.update(db, sql);
+		that.remove();
 	});
 });
 
@@ -62,7 +57,14 @@ function initList() {
 		for (var i = 0; i < res.rows.length; i++) {
 			var id = data.item(i).GUID;
 			var type = data.item(i).plan_type_title;
-			var li = '<li class="mui-table-view-cell" id="' + id + '" >' + type + '</li>';
+			var li ='<li class="mui-table-view-cell" id="' + id + '" >' +
+					'<div class="mui-slider-right mui-disabled">' +
+					'<a class="mui-btn mui-btn-red delete">删除</a>' +
+					'</div>' +
+					'<div class="mui-slider-handle">' +
+					type +
+					'</div>' +
+					'</li>';
 			$list.append(li);
 		}
 	});

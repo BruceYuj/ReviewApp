@@ -18,28 +18,24 @@ mui.plusReady(function() {
 		offset: '46px'
 	}, pulldownRefresh);
 
-	// 长按完成任务
-	$("#todoList").on("longtap","li", function() {
-		var that = this;
-		var btnArray = ['否', '是'];
-		mui.confirm('确认完成当前任务？', 'Hello client', btnArray, function(e) {
-			if (e.index == 1) {
-				var sql = 'UPDATE tb_plan_flow SET finish_state=1, finish_time="' + 
-							formatDate(new Date()) + ':00:00'+ '" WHERE GUID="' + $(that).attr("id") + '"';
-				console.log(sql);
-				lib.h.update(db, sql);
-				$(that).appendTo("#finishedTask ul");
-			} 
-		},"div");
+	// 左滑完成任务
+	$("#todoList").on("tap",".finish", function() {
+		var that = $(this).parents("li");
+		var sql = 'UPDATE tb_plan_flow SET finish_state=1, finish_time="' + 
+					formatDate(new Date()) + ':00:00'+ '" WHERE GUID="' + that.attr("id") + '"';
+		console.log(sql);
+		lib.h.update(db, sql);
+		that.find(".plan").appendTo("#finishedTask ul");
+		that.remove();
 	});
 	// 点击查看任务详情
-	$("#todoList,#finishedTask").on("tap","li", function() {
+	$("#todoList,#finishedTask").on("tap",".plan", function() {
 		mui.openWindow({
 			url: "addItem.html",
 			id: "addItem",
 			extras: {
 				read: true,
-				GUID: $(this).attr("data") 
+				GUID: $(this).parents("li").attr("data") 
 			}
 		});
 	});
@@ -136,6 +132,10 @@ function initList(planType) {
 //			console.log(res.rows.item(i).begin_time);
 			var str = '';
 			str +=  '<li class="mui-table-view-cell" id="' + res.rows.item(i).GUID +'" data="' + res.rows.item(i).plan_id + '">' +
+					'<div class="mui-slider-right mui-disabled">' +
+					'<a class="mui-btn mui-btn-red finish">完成</a>' +
+					'</div>' +
+					'<div class="mui-slider-handle">' +
 				    '<div class="plan">' +
 					'<div class="plan-content">' +
 					'<div>' +
@@ -145,6 +145,7 @@ function initList(planType) {
 					'<p>' + res.rows.item(i).plan_title + '<p>' +
 					'</div>' +
 					'<div class="plan-type">' + planType[res.rows.item(i).plan_type] + '</div>' +						
+					'</div>' +
 					'</div>' +
 					'</li>';
 			$("#todoList ul").append(str);

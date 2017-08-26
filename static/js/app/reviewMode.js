@@ -34,28 +34,23 @@ mui.plusReady(function() {
 		offset: '46px'
 	}, pulldownRefresh);
 	
-	// 长按删除
-	$("#modeList").on("longtap","li", function() {
-		var that = this;
-		var btnArray = ['否', '是'];
-		mui.confirm('确认删除？', 'Hello client', btnArray, function(e) {
-			if (e.index == 1) {
-				var sql = 'delete from tb_review_model where GUID="' + $(that).attr("id") + '"';
-				console.log(sql);
-				lib.h.update(db, sql);
-				$(that).remove();
-			} 
-		},"div");
+	// 左滑删除
+	$("#modeList").on("tap",".delete", function() {
+		var that = $(this).parents("li");
+		var sql = 'delete from tb_review_model where GUID="' + that.attr("id") + '"';
+		console.log(sql);
+		lib.h.update(db, sql);
+		that.remove();
 	});
 
-	$("#modeList").on("tap","li", function() {
+	$("#modeList").on("tap",".mui-slider-handle", function() {
 		mui.openWindow({
 			url: "addMode.html",
 			id: "addMode",
 			extras: {
 				name: $(this).find("span").text(),
 				update: true,
-				GUID: $(this).attr("id") 
+				GUID: $(this).parent().attr("id") 
 			}
 		});
 	});
@@ -78,10 +73,15 @@ function initList() {
 				total += parseInt(regulation[j]);
 			}
 			var li = '<li class="mui-table-view-cell mui-media" id="' + id + '" >' + 
+					'<div class="mui-slider-right mui-disabled">' +
+					'<a class="mui-btn mui-btn-red delete">删除</a>' +
+					'</div>' +
+					'<div class="mui-slider-handle">' +
 		            '<div class="mui-media-body">' +
 		            '<span>' + title + '</span>' +
 		            '<p class="mui-ellipsis">' + '复习' + regulation.length + '次，共' + hourToDay(total) + '天' + '</p>' +
 		            '</div>' + 
+		            '</div>' +
 			        '</li>';
 			console.log(li);
 			$list.append(li);
