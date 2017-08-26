@@ -20,7 +20,14 @@ mui.plusReady(function() {
 	lib.on('.adda', 'tap', newMode);
 	
 	// index页面滑动操作，关闭开启菜单页面
-	window.addEventListener('swiperight', openMenu);
+	window.addEventListener('swiperight', function(e) {
+		var detail = e.detail;
+//		console.log(detail.angle);
+//		console.log(JSON.stringify(detail));
+		if (Math.abs(detail.angle) < 8) {
+			openMenu();
+		}
+	});
 	window.addEventListener('swipeleft', closeMenu);
 	// menu页面向左滑动，关闭菜单
 	window.addEventListener("menu:swipeleft", closeMenu);

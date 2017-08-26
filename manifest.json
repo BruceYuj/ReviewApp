@@ -214,7 +214,8 @@
 					"static/js/app/mainList.js",
 					"static/js/app/menuCommon.js",
 					"static/css/app/index.css",
-					"static/js/lib/websqldump.js"
+					"static/js/lib/websqldump.js",
+					"static/js/mui.js"
 				],
 				"refer": [
 					"view/addItem.html",
